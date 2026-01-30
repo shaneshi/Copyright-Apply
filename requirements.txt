@@ -1,0 +1,9 @@
+# Software Copyright Application Generator - Dependencies
+# Python 3.10+ required
+
+# No external dependencies required - uses Python standard library only
+# The script is designed to work with Claude Code VS Code extension
+
+# Optional: for development/testing
+# pytest>=7.0.0
+# black>=22.0.0
