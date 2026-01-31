@@ -211,12 +211,22 @@ Industry: {industry}
 Target OS: Linux
 Development Tool: VSCode
 
+IMPORTANT: Design modules SPECIFICALLY for "{software_name}" in the {industry} industry.
+Each module must be relevant to the software's purpose and target users.
+Think about what functions this software actually needs based on its name and industry.
+
 Requirements:
 1. Create exactly {module_count} functional modules (NO MORE, NO LESS)
 2. Each module should have:
-   - Module name (in Chinese)
-   - Brief description
-   - Key features (3-5 items)
+   - Module name (in Chinese) - must be relevant to {software_name}
+   - Brief description - describe how this module serves {software_name}
+   - Key features (3-5 items) - specific features for this type of software
+
+Module examples for reference (DO NOT copy, create ORIGINAL modules for {software_name}):
+- User Management: User registration, login, permission control
+- Data Management: Data entry, query, statistics, export
+- Business Logic: Core business processes, workflows
+- System Settings: Configuration, parameter management
 
 IMPORTANT: Return ONLY a valid JSON array with exactly {module_count} modules.
 The array structure must be:

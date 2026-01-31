@@ -136,6 +136,7 @@ def print_step(step: int, total: int, description: str):
 
 def confirm_action(prompt_text: str) -> bool:
     """Ask user to confirm before proceeding."""
+    play_alert_sound()
     while True:
         response = input(f"\n  {prompt_text} (y/n): ").strip().lower()
         if response in ['y', 'yes', '是', 'Y']:
@@ -144,6 +145,25 @@ def confirm_action(prompt_text: str) -> bool:
             return False
         else:
             print(f"  请输入 y/是 或 n/否")
+
+
+def play_alert_sound():
+    """Play an alert sound to notify user attention is needed."""
+    import platform
+    system = platform.system()
+    try:
+        if system == "Darwin":  # macOS
+            os.system("afplay /System/Library/Sounds/Glass.aiff &")
+        elif system == "Linux":
+            # Try common Linux sound commands
+            os.system("paplay /usr/share/sounds/freedesktop/stereo/message.oga 2>/dev/null &")
+            os.system("aplay /usr/share/sounds/alsa/Front_Center.wav 2>/dev/null &")
+        elif system == "Windows":
+            import winsound
+            winsound.MessageBeep(winsound.MB_ICONEXCLAMATION)
+    except Exception:
+        # Silently ignore if sound fails to play
+        pass
 
 
 def count_lines_in_file(filepath: Path) -> int:
@@ -253,12 +273,21 @@ Industry: {industry}
 Target OS: Linux
 Development Tool: VSCode
 
+IMPORTANT: Design modules SPECIFICALLY for "{software_name}" in the {industry} industry.
+Each module must be relevant to the software's purpose and target users.
+
 Requirements:
-1. Create exactly {module_count} functional modules
+1. Create exactly {module_count} functional modules (NO MORE, NO LESS)
 2. Each module should have:
-   - Module name (in Chinese)
-   - Brief description
-   - Key features (3-5 items)
+   - Module name (in Chinese) - must be relevant to {software_name}
+   - Brief description - describe how this module serves {software_name}
+   - Key features (3-5 items) - specific features for this type of software
+
+Module examples for reference (DO NOT copy, create ORIGINAL modules for {software_name}):
+- User Management: User registration, login, permission control
+- Data Management: Data entry, query, statistics, export
+- Business Logic: Core business processes, workflows
+- System Settings: Configuration, parameter management
 
 Return the result as a JSON array of modules with structure:
 [
@@ -1523,6 +1552,7 @@ class SoftwareCopyrightOrchestrator:
                 prompt_text += " *"
 
             while True:
+                play_alert_sound()
                 user_input = input(f"  {prompt_text}: ").strip()
 
                 if not user_input:
@@ -1546,6 +1576,7 @@ class SoftwareCopyrightOrchestrator:
         print("  建议数量: 8-15 个功能点")
 
         while True:
+            play_alert_sound()
             module_input = input("\n  请输入功能点数量 [默认: 10]: ").strip()
             if not module_input:
                 module_count = 10
@@ -1557,6 +1588,7 @@ class SoftwareCopyrightOrchestrator:
                         continue
                     if module_count > 30:
                         print(f"  ⚠️  功能点数量建议不超过 30 个")
+                        play_alert_sound()
                         confirm = input(f"  确定要生成 {module_count} 个功能点吗? (y/n): ").strip().lower()
                         if confirm not in ['y', 'yes', '是', 'Y']:
                             continue
