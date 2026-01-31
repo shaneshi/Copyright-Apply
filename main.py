@@ -77,7 +77,7 @@ VARIABLE_DEFINITIONS = {
     },
     "applicant": {
         "prompt": "请输入著作权人名称",
-        "default": "中国人民解放军东部战区总医院",
+        "default": "",
         "required": False
     },
     "comp_date": {
@@ -87,23 +87,23 @@ VARIABLE_DEFINITIONS = {
     },
     "industry": {
         "prompt": "请输入面向领域/行业 (例如: 二三级医院)",
-        "default": "医院",
-        "required": True
+        "default": "",
+        "required": False
     },
     "applicant_address": {
         "prompt": "请输入申请人详细地址",
-        "default": "江苏省南京市玄武区中山东路305号",
-        "required": True
+        "default": "",
+        "required": False
     },
     "applicant_contact": {
         "prompt": "请输入联系人姓名",
-        "default": "张三",
-        "required": True
+        "default": "",
+        "required": False
     },
     "applicant_phone": {
         "prompt": "请输入手机号码",
-        "default": "13800138000",
-        "required": True
+        "default": "",
+        "required": False
     },
 }
 
@@ -1699,9 +1699,10 @@ class SoftwareCopyrightOrchestrator:
 
     def adjust_line_count(self):
         """Step 4: Skip line count adjustment (no target limits)."""
-        # Update line count variable
-        self.variables["line_count"] = str(self.total_lines)
-        print(f"\n  ✓ Generated {self.total_lines} lines (no target limit)")
+        # Update line count variable - multiply by 10 for registration form
+        display_line_count = self.total_lines * 10
+        self.variables["line_count"] = str(display_line_count)
+        print(f"\n  ✓ Generated {self.total_lines} lines (displayed as {display_line_count} in registration form)")
 
     def generate_function_descriptions(self):
         """Step 5: Generate function descriptions for manuals."""
