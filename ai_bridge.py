@@ -217,16 +217,12 @@ Think about what functions this software actually needs based on its name and in
 
 Requirements:
 1. Create exactly {module_count} functional modules (NO MORE, NO LESS)
-2. Each module should have:
-   - Module name (in Chinese) - must be relevant to {software_name}
-   - Brief description - describe how this module serves {software_name}
-   - Key features (3-5 items) - specific features for this type of software
+2. Each module must have these THREE REQUIRED FIELDS:
+   - "name": Module name (in Chinese) - must be relevant to {software_name}
+   - "description": Brief description - describe how this module serves {software_name}
+   - "features": Array of 3-5 feature items - specific features for this type of software
 
-Module examples for reference (DO NOT copy, create ORIGINAL modules for {software_name}):
-- User Management: User registration, login, permission control
-- Data Management: Data entry, query, statistics, export
-- Business Logic: Core business processes, workflows
-- System Settings: Configuration, parameter management
+CRITICAL: You MUST return ONLY valid JSON format. Do NOT use Markdown code blocks.
 
 IMPORTANT: Return ONLY a valid JSON array with exactly {module_count} modules.
 The array structure must be:
@@ -235,6 +231,20 @@ The array structure must be:
     "name": "模块名称",
     "description": "模块描述",
     "features": ["功能1", "功能2", "功能3"]
+  }}
+]
+
+Example of valid JSON format (for reference only - DO NOT copy these modules):
+[
+  {{
+    "name": "User Management",
+    "description": "User registration, login, permission control",
+    "features": ["User registration", "Login authentication", "Permission management"]
+  }},
+  {{
+    "name": "Data Management",
+    "description": "Data entry, query, statistics, export",
+    "features": ["Data entry", "Data query", "Statistics", "Data export"]
   }}
 ]
 

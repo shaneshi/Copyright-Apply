@@ -10,7 +10,6 @@ including:
 - Installation Manual (安装说明书)
 - Registration Form (软件著作权登记信息表)
 
-Target: 3000-3200 lines of code (strict requirement)
 OS: Linux only
 Dev Tools: VSCode only
 """
@@ -147,6 +146,55 @@ def confirm_action(prompt_text: str) -> bool:
             print(f"  请输入 y/是 或 n/否")
 
 
+def has_existing_files(directory: Path) -> bool:
+    """Check if directory has any existing files (html, json, md)."""
+    if not directory.exists():
+        return False
+    for pattern in ["*.html", "*.json", "*.md"]:
+        if list(directory.glob(pattern)):
+            return True
+    return False
+
+
+def clear_directory(directory: Path):
+    """Clear all files in a directory."""
+    import shutil
+    if directory.exists():
+        shutil.rmtree(directory)
+        directory.mkdir(parents=True, exist_ok=True)
+        print(f"  ✓ 已清空目录: {directory}")
+
+
+def check_and_clear_history():
+    """Check for existing files in output and process directories, and clear them if user confirms."""
+    print_section("检查历史数据")
+    
+    has_output = has_existing_files(OUTPUT_DIR)
+    has_process = has_existing_files(PROCESS_DIR)
+    
+    if not has_output and not has_process:
+        print("  ✓ 未检测到历史数据")
+        return True
+    
+    print("\n  检测到以下目录存在历史数据:")
+    if has_output:
+        print(f"    - {OUTPUT_DIR}")
+    if has_process:
+        print(f"    - {PROCESS_DIR}")
+    
+    if confirm_action("程序运行需要清空历史数据，是否确认删除？"):
+        print("\n  正在清空历史数据...")
+        if has_output:
+            clear_directory(OUTPUT_DIR)
+        if has_process:
+            clear_directory(PROCESS_DIR)
+        print("\n  ✓ 历史数据已清空")
+        return True
+    else:
+        print("\n  ❌ 如果不清除历史数据，无法运行")
+        return False
+
+
 def play_alert_sound():
     """Play an alert sound to notify user attention is needed."""
     import platform
@@ -278,23 +326,33 @@ Each module must be relevant to the software's purpose and target users.
 
 Requirements:
 1. Create exactly {module_count} functional modules (NO MORE, NO LESS)
-2. Each module should have:
-   - Module name (in Chinese) - must be relevant to {software_name}
-   - Brief description - describe how this module serves {software_name}
-   - Key features (3-5 items) - specific features for this type of software
+2. Each module must have these THREE REQUIRED FIELDS:
+   - "name": Module name (in Chinese) - must be relevant to {software_name}
+   - "description": Brief description - describe how this module serves {software_name}
+   - "features": Array of 3-5 feature items - specific features for this type of software
 
-Module examples for reference (DO NOT copy, create ORIGINAL modules for {software_name}):
-- User Management: User registration, login, permission control
-- Data Management: Data entry, query, statistics, export
-- Business Logic: Core business processes, workflows
-- System Settings: Configuration, parameter management
+CRITICAL: You MUST return ONLY valid JSON format. Do NOT use Markdown code blocks.
 
-Return the result as a JSON array of modules with structure:
+Return the result as a JSON array with EXACTLY this structure:
 [
   {{
     "name": "模块名称",
     "description": "模块描述",
     "features": ["功能1", "功能2", "功能3"]
+  }}
+]
+
+Example of valid JSON format (for reference only - DO NOT copy these modules):
+[
+  {{
+    "name": "User Management",
+    "description": "User registration, login, permission control",
+    "features": ["User registration", "Login authentication", "Permission management"]
+  }},
+  {{
+    "name": "Data Management",
+    "description": "Data entry, query, statistics, export",
+    "features": ["Data entry", "Data query", "Statistics", "Data export"]
   }}
 ]"""
 
@@ -1698,7 +1756,7 @@ class SoftwareCopyrightOrchestrator:
         print(f"\n  ✓ Total lines generated: {self.total_lines}")
 
     def adjust_line_count(self):
-        """Step 4: Skip line count adjustment (no target limits)."""
+        """Step 4: 统计代码行数并更新变量."""
         # Update line count variable - multiply by 10 for registration form
         display_line_count = self.total_lines * 10
         self.variables["line_count"] = str(display_line_count)
@@ -1953,7 +2011,7 @@ class SoftwareCopyrightOrchestrator:
             print_section("Step 3: 前端页面开发")
             self.generate_frontend_code()
 
-            # Step 4: Adjust line count
+            # Step 4: 统计代码行数
             self.adjust_line_count()
 
             # Confirm before proceeding to document generation
@@ -2012,6 +2070,10 @@ def main():
     )
 
     args = parser.parse_args()
+
+    # Check and clear historical data before starting
+    if not check_and_clear_history():
+        sys.exit(0)
 
     orchestrator = SoftwareCopyrightOrchestrator(claude_mode=args.mode)
 
